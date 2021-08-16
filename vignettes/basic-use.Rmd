@@ -1,0 +1,149 @@
+---
+title: "Basic GO Analysis with mogo"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Basic GO Analysis with mogo}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## osgo
+
+`osgo` is a package for generating GO analysis using _O.sativa_ genes only. You can provide the main function with the list of genes of interest and it does (most of) the rest!
+
+
+## Preparation
+
+The first step is to load our gene expression data file and get a simple list of genes for GO analysis
+
+### Data loading
+
+First read in your gene expression file. You can do that with `read_csv()`. Minimally it should contain the gene ID, the log fold change and the $p$-value.
+
+
+```{r setup, message=FALSE}
+library(readr)
+library(dplyr)
+library(here)
+
+gene_expression <- read_csv(here("inst", "extdata","sample_gene_expression.csv"))
+gene_expression
+```
+
+### Filter as required
+
+We can now filter the genes to select only the ones with e.g $p <= 0.05$, using `filter()`
+
+```{r, message=FALSE}
+filtered_gene_expression <- filter(gene_expression, p.adj <= 0.05)
+filtered_gene_expression
+```
+
+### Extract the gene id column
+
+We can now extract the `gene_id` column using the `$` syntax
+
+```{r, message=FALSE}
+gene_ids <- filtered_gene_expression$gene_id
+gene_ids
+```
+
+## GO enrichment
+
+The GO enrichment is done in the `osgo` package. Load that and use the `do_enrich()` function, passing it the vector of `gene_ids` to calculate the enrichment. **Note that you must here specify which _O.sativa_ group you use.** Use the `which` argument with either `"indica"` or `"japonica"`. 
+
+```{r, message=FALSE, warning=FALSE}
+library(osgo)
+enrich <- do_enrich(gene_ids, which = "japonica")
+enrich
+```
+
+
+As you can see the `enrich` object has a lot of information in it. The result table can be extracted using `as.data.frame()` to convert the `enrich` to a data.frame (note `glimpse` is a helpful function for printing out big dataframes).
+
+
+```{r}
+result_table <- as.data.frame(enrich)
+glimpse(result_table)
+```
+
+You can save the result to an excel-compatible csv file with, `write_csv()`
+
+```{r, eval=FALSE}
+write_csv(result_table, "my_GO_results.csv")
+```
+
+## Plotting
+
+The `enrich` object is from the package `ClusterProfiler` and can be used directly in most of it's plot types. See them at the `ClusterProfiler` page [http://yulab-smu.top/clusterProfiler-book/chapter12.html#bar-plot](http://yulab-smu.top/clusterProfiler-book/chapter12.html#bar-plot)
+
+### Barplot
+
+Works ok, but the text can make it a bit unwieldy
+
+```{r,fig.width=24, fig.height=8}
+library(clusterProfiler)
+library(enrichplot)
+barplot(enrich, showCategory=5)
+```
+
+### Dotplot
+
+Similar
+
+```{r, fig.width=18, fig.height=8}
+dotplot(enrich, showCategory=5)
+```
+
+### UpSetPlot
+
+These are like a really sophisticated Venn/Euler diagram. [https://jku-vds-lab.at/tools/upset/](https://jku-vds-lab.at/tools/upset/)
+
+```{r,fig.width=18, fig.height=8}
+upsetplot(enrich)
+```
+
+### GoPlot
+
+Plots from the package `GoPlot` such as bubble plots can be made, but need you to convert the `enrich` object to a DAVID compatible object, and make an accessory data.frame of the expression information. Use `enricher_to_david()` for the first part, and the relevant columns of the gene expression data you created at the beginning for the second part. **Note that for david conversion you must here specify which _O.sativa_ group you use.** Use the `which` argument with either `"indica"` or `"japonica"`.
+
+```{r}
+david <- enricher_to_david(enrich, which = "japonica")
+expr_info <- data.frame(
+  ID = filtered_gene_expression$gene_id,
+  logFC = filtered_gene_expression$log2fc
+)
+```
+
+Then you can convert that to the data format needed for `GoPlot`
+
+```{r}
+library(GOplot)
+circ <- circle_dat(david, expr_info)
+```
+
+### Go Bar
+
+A different sort of GO barchart
+
+```{r, fig.height=12, fig.width=12}
+GOBar(subset(circ, category == 'BP'))
+```
+
+### Go Bubble
+
+A plot with bubbles
+
+```{r, eval=FALSE, ig.height=12, fig.width=12}
+GOBubble(circ, labels=3)
+```
+
+
+
