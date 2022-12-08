@@ -40,7 +40,7 @@ library(readr)
 library(dplyr)
 library(here)
 
-gene_expression <- read_csv(here("inst", "extdata","sample_gene_expression.csv"))
+gene_expression <- read_csv(system.file("extdata", "sample_gene_expression.csv", package = "osgo", mustWork = TRUE))
 gene_expression
 #> # A tibble: 132 × 3
 #>    gene_id         log2fc  p.adj
@@ -106,11 +106,11 @@ The GO enrichment is done in the `osgo` package. Load that and use the
 `do_enrich()` function, passing it the vector of `gene_ids` to calculate
 the enrichment. **Note that you must here specify which *O.sativa* group
 you use.** Use the `which` argument with either `"indica"` or
-`"japonica"`.
+`"japonica"`. Choose the type of information you prefer to use as labels: `"go"` for the GO:number, `"name"` for the GO name, or `"description"` for the long description. 
 
 ``` r
 library(osgo)
-enrich <- do_enrich(gene_ids, which = "japonica")
+enrich <- do_enrich(gene_ids, which = "japonica", label_type = "go")
 enrich
 #> #
 #> # over-representation test
@@ -122,7 +122,7 @@ enrich
 #> #...5 enriched terms found
 #> 'data.frame':    5 obs. of  9 variables:
 #>  $ ID         : chr  "GO:0010229" "GO:0048573" "GO:0048278" "GO:0045489" ...
-#>  $ Description: chr  "The process whose specific outcome is the progression of an inflorescence over time, from its formation to the "| __truncated__ "A change from the vegetative to the reproductive phase as a result of detection of, or exposure to, a period of"| __truncated__ "The initial attachment of a transport vesicle membrane to the target membrane, mediated by proteins protruding "| __truncated__ "The chemical reactions and pathways resulting in the formation of pectin, a polymer containing a backbone of al"| __truncated__ ...
+#>  $ Description: chr  "GO:0010229" "GO:0048573" "GO:0048278" "GO:0045489" ...
 #>  $ GeneRatio  : chr  "1/9" "1/9" "1/9" "1/9" ...
 #>  $ BgRatio    : chr  "12/27807" "13/27807" "22/27807" "24/27807" ...
 #>  $ pvalue     : num  0.00388 0.0042 0.0071 0.00774 0.00838
@@ -148,7 +148,7 @@ glimpse(result_table)
 #> Rows: 5
 #> Columns: 9
 #> $ ID          <chr> "GO:0010229", "GO:0048573", "GO:0048278", "GO:0045489", "G…
-#> $ Description <chr> "The process whose specific outcome is the progression of …
+#> $ Description <chr> "GO:0010229", "GO:0048573", "GO:0048278", "GO:0045489", "G…
 #> $ GeneRatio   <chr> "1/9", "1/9", "1/9", "1/9", "1/9"
 #> $ BgRatio     <chr> "12/27807", "13/27807", "22/27807", "24/27807", "26/27807"
 #> $ pvalue      <dbl> 0.003877773, 0.004200317, 0.007099035, 0.007742175, 0.0083…
@@ -264,5 +264,6 @@ GOBar(subset(circ, category == 'BP'))
 A plot with bubbles
 
 ``` r
-GOBubble(circ, labels=3)
+GOBubble(circ, labels = 1)
 ```
+

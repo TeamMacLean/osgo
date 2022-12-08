@@ -20,8 +20,6 @@ knitr::opts_chunk$set(
 `osgo` is a package for generating GO analysis using _O.sativa_ genes only. You can provide the main function with the list of genes of interest and it does (most of) the rest!
 
 
-
-
 ## Installation
 
 To install you'll need the `devtools` R package. From the R console in RStudio type 
@@ -50,7 +48,7 @@ library(readr)
 library(dplyr)
 library(here)
 
-gene_expression <- read_csv(here("inst", "extdata","sample_gene_expression.csv"))
+gene_expression <- read_csv(system.file("extdata", "sample_gene_expression.csv", package = "osgo", mustWork = TRUE))
 gene_expression
 ```
 
@@ -74,11 +72,15 @@ gene_ids
 
 ## GO enrichment
 
-The GO enrichment is done in the `osgo` package. Load that and use the `do_enrich()` function, passing it the vector of `gene_ids` to calculate the enrichment. **Note that you must here specify which _O.sativa_ group you use.** Use the `which` argument with either `"indica"` or `"japonica"`. 
+The GO enrichment is done in the `osgo` package. Load that and use the
+`do_enrich()` function, passing it the vector of `gene_ids` to calculate
+the enrichment. **Note that you must here specify which *O.sativa* group
+you use.** Use the `which` argument with either `"indica"` or
+`"japonica"`. Choose the type of information you prefer to use as labels: `"go"` for the GO:number, `"name"` for the GO name, or `"description"` for the long description. 
 
 ```{r, message=FALSE, warning=FALSE}
 library(osgo)
-enrich <- do_enrich(gene_ids, which = "japonica")
+enrich <- do_enrich(gene_ids, which = "japonica", label_type = "go")
 enrich
 ```
 
@@ -108,7 +110,7 @@ Works ok, but the text can make it a bit unwieldy
 ```{r,fig.width=24, fig.height=8}
 library(clusterProfiler)
 library(enrichplot)
-barplot(enrich, showCategory=5)
+barplot(enrich, showCategory = 5)
 ```
 
 ### Dotplot
@@ -116,7 +118,7 @@ barplot(enrich, showCategory=5)
 Similar
 
 ```{r, fig.width=18, fig.height=8}
-dotplot(enrich, showCategory=5)
+dotplot(enrich, showCategory = 5)
 ```
 
 ### UpSetPlot
@@ -159,5 +161,5 @@ GOBar(subset(circ, category == 'BP'))
 A plot with bubbles
 
 ```{r, eval=FALSE, ig.height=12, fig.width=12}
-GOBubble(circ, labels=3)
+GOBubble(circ, labels = 1)
 ```

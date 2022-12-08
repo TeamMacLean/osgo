@@ -4,12 +4,18 @@
 \alias{do_enrich}
 \title{run clusterProfiler::enricher on vector of gene ids,}
 \usage{
-do_enrich(genes, termsfile = "inst/extdata/MG8_mart_export.txt", ...)
+do_enrich(genes, termsfile = NULL, which = "indica", label_type = "go", ...)
 }
 \arguments{
 \item{genes}{character vector of gene IDs of interest}
 
 \item{termsfile}{TSV file from biomart export of GO terms}
+
+\item{which}{subspecies with either "indica" or "japonica". Default is "indica"}
+
+\item{label_type}{string for the type of labels wanted; default is "go" for the go term (GO:number), "name" for the GO name, and "description" for the GO long description.}
+
+\item{...}{more options described in clusterProfiler::enricher()}
 }
 \value{
 enricher object

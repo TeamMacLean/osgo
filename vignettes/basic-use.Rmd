@@ -57,11 +57,11 @@ gene_ids
 
 ## GO enrichment
 
-The GO enrichment is done in the `osgo` package. Load that and use the `do_enrich()` function, passing it the vector of `gene_ids` to calculate the enrichment. **Note that you must here specify which _O.sativa_ group you use.** Use the `which` argument with either `"indica"` or `"japonica"`. 
+The GO enrichment is done in the `osgo` package. Load that and use the `do_enrich()` function, passing it the vector of `gene_ids` to calculate the enrichment. **Note that you must here specify which _O.sativa_ group you use.** Use the `which` argument with either `"indica"` or `"japonica"`. Choose the type of information you prefer to use as labels: `"go"` for the GO:number, `"name"` for the GO name, or `"description"` for the long description. 
 
 ```{r, message=FALSE, warning=FALSE}
 library(osgo)
-enrich <- do_enrich(gene_ids, which = "japonica")
+enrich <- do_enrich(gene_ids, which = "japonica", label_type = "go")
 enrich
 ```
 
@@ -91,15 +91,23 @@ Works ok, but the text can make it a bit unwieldy
 ```{r,fig.width=24, fig.height=8}
 library(clusterProfiler)
 library(enrichplot)
-barplot(enrich, showCategory=5)
+barplot(enrich, showCategory = 5)
 ```
+
+To display the GO names:
+
+```{r}
+enrich_names <- do_enrich(gene_ids, which = "japonica", label_type = "name")
+barplot(enrich_names, showCategory = 5)
+```
+
 
 ### Dotplot
 
 Similar
 
 ```{r, fig.width=18, fig.height=8}
-dotplot(enrich, showCategory=5)
+dotplot(enrich, showCategory = 5)
 ```
 
 ### UpSetPlot
