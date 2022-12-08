@@ -1,11 +1,10 @@
 Package: osgo
 Type: Package
 Title: GO analysis for O.sativa
-Version: 0.1.0
+Version: 0.2.0
 Author: Dan MacLean
 Maintainer: Dan MacLean <dan.maclean@tsl.ac.uk>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: Aggregate some common plots for GO enrichment analysis of rice (Oryza sativa).
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -19,7 +18,7 @@ Imports:
     here,
     readr
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.2
 Suggests: 
     rmarkdown,
     knitr
