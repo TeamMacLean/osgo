@@ -19,7 +19,6 @@ knitr::opts_chunk$set(
 
 `osgo` is a package for generating GO analysis using _O.sativa_ genes only. You can provide the main function with the list of genes of interest and it does (most of) the rest!
 
-
 ## Installation
 
 To install you'll need the `devtools` R package. From the R console in RStudio type 

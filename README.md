@@ -1,13 +1,15 @@
 Basic GO Analysis with osgo
 ================
 Dan MacLean
-16 August, 2021
+09 December, 2022
 
 ## osgo
 
 `osgo` is a package for generating GO analysis using *O.sativa* genes
 only. You can provide the main function with the list of genes of
 interest and it does (most of) the rest!
+
+[![R build status](https://github.com/TeamMacLean/osgo/workflows/R-CMD-check/badge.svg)](https://github.com/TeamMacLean/osgo/actions)
 
 ## Installation
 
@@ -33,7 +35,7 @@ list of genes for GO analysis
 
 First read in your gene expression file. You can do that with
 `read_csv()`. Minimally it should contain the gene ID, the log fold
-change and the *p*-value.
+change and the $p$-value.
 
 ``` r
 library(readr)
@@ -61,7 +63,7 @@ gene_expression
 ### Filter as required
 
 We can now filter the genes to select only the ones with e.g
-*p* &lt;  = 0.05, using `filter()`
+$p <= 0.05$, using `filter()`
 
 ``` r
 filtered_gene_expression <- filter(gene_expression, p.adj <= 0.05)
@@ -106,7 +108,9 @@ The GO enrichment is done in the `osgo` package. Load that and use the
 `do_enrich()` function, passing it the vector of `gene_ids` to calculate
 the enrichment. **Note that you must here specify which *O.sativa* group
 you use.** Use the `which` argument with either `"indica"` or
-`"japonica"`. Choose the type of information you prefer to use as labels: `"go"` for the GO:number, `"name"` for the GO name, or `"description"` for the long description. 
+`"japonica"`. Choose the type of information you prefer to use as
+labels: `"go"` for the <GO:number>, `"name"` for the GO name, or
+`"description"` for the long description.
 
 ``` r
 library(osgo)
@@ -131,10 +135,9 @@ enrich
 #>  $ geneID     : chr  "Os06t0603000-01" "Os06t0603000-01" "Os03t0787000-01" "Os03t0413400-01" ...
 #>  $ Count      : int  1 1 1 1 1
 #> #...Citation
-#>   Guangchuang Yu, Li-Gen Wang, Yanyan Han and Qing-Yu He.
-#>   clusterProfiler: an R package for comparing biological themes among
-#>   gene clusters. OMICS: A Journal of Integrative Biology
-#>   2012, 16(5):284-287
+#>  T Wu, E Hu, S Xu, M Chen, P Guo, Z Dai, T Feng, L Zhou, W Tang, L Zhan, X Fu, S Liu, X Bo, and G Yu.
+#>  clusterProfiler 4.0: A universal enrichment tool for interpreting omics data.
+#>  The Innovation. 2021, 2(3):100141
 ```
 
 As you can see the `enrich` object has a lot of information in it. The
@@ -178,30 +181,30 @@ Works ok, but the text can make it a bit unwieldy
 
 ``` r
 library(clusterProfiler)
-#> clusterProfiler v4.0.2  For help: https://yulab-smu.top/biomedical-knowledge-mining-book/
+#> clusterProfiler v4.6.0  For help: https://yulab-smu.top/biomedical-knowledge-mining-book/
 #> 
 #> If you use clusterProfiler in published research, please cite:
-#> T Wu, E Hu, S Xu, M Chen, P Guo, Z Dai, T Feng, L Zhou, W Tang, L Zhan, X Fu, S Liu, X Bo, and G Yu. clusterProfiler 4.0: A universal enrichment tool for interpreting omics data. The Innovation. 2021, doi: 10.1016/j.xinn.2021.100141
+#> T Wu, E Hu, S Xu, M Chen, P Guo, Z Dai, T Feng, L Zhou, W Tang, L Zhan, X Fu, S Liu, X Bo, and G Yu. clusterProfiler 4.0: A universal enrichment tool for interpreting omics data. The Innovation. 2021, 2(3):100141
 #> 
 #> Attaching package: 'clusterProfiler'
 #> The following object is masked from 'package:stats':
 #> 
 #>     filter
 library(enrichplot)
-barplot(enrich, showCategory=5)
+barplot(enrich, showCategory = 5)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
 ### Dotplot
 
 Similar
 
 ``` r
-dotplot(enrich, showCategory=5)
+dotplot(enrich, showCategory = 5)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 ### UpSetPlot
 
@@ -212,7 +215,7 @@ These are like a really sophisticated Venn/Euler diagram.
 upsetplot(enrich)
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 ### GoPlot
 
@@ -257,7 +260,7 @@ A different sort of GO barchart
 GOBar(subset(circ, category == 'BP'))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 ### Go Bubble
 
@@ -266,4 +269,3 @@ A plot with bubbles
 ``` r
 GOBubble(circ, labels = 1)
 ```
-
