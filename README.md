@@ -9,8 +9,6 @@ Dan MacLean
 only. You can provide the main function with the list of genes of
 interest and it does (most of) the rest!
 
-[![R build status](https://github.com/TeamMacLean/osgo/workflows/R-CMD-check/badge.svg)](https://github.com/TeamMacLean/osgo/actions)
-
 ## Installation
 
 To install you’ll need the `devtools` R package. From the R console in
